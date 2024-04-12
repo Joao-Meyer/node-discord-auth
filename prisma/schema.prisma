@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  login     String   @unique @db.VarChar(150)
+  password  String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  @@map("user")
+}
+
+model AzureData {
+  id            Int        @id @default(autoincrement())
+  indexName     String
+  nickname      String
+  blobContainer String?
+  createdAt     DateTime   @default(now()) @db.Timestamptz()
+  updatedAt     DateTime   @updatedAt @db.Timestamptz()
+  aiConfig      AiConfig[]
+
+  @@map("azure_data")
+}
+
+model OpenAiModel {
+  id        Int       @id @default(autoincrement())
+  name      String
+  maxTokens Int
+  AiModel   AiModel[]
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime  @updatedAt @db.Timestamptz()
+
+  @@map("open_ai_model")
+}
+
+model AiModel {
+  id            Int         @id @default(autoincrement())
+  deploymentId  String
+  openAiModel   OpenAiModel @relation(fields: [openAiModelId], references: [id])
+  openAiModelId Int
+  nickname      String
+  createdAt     DateTime    @default(now()) @db.Timestamptz()
+  updatedAt     DateTime    @updatedAt @db.Timestamptz()
+  aiConfig      AiConfig[]
+
+  @@map("ai_model")
+}
+
+model AiConfig {
+  id                     Int        @id @default(autoincrement())
+  nickname               String     @default("")
+  defaultPrompt          String     @default("")
+  temperature            Float      @default(0.7)
+  maxRetries             Int        @default(1)
+  topP                   Float      @default(1.0)
+  frequencyPenalty       Float      @default(0.0)
+  presencePenalty        Float      @default(0)
+  previewMessageIncluded Int        @default(10)
+  stopSequence           Int?
+  aiModel                AiModel    @relation(fields: [aiModelId], references: [id])
+  aiModelId              Int
+  azureData              AzureData? @relation(fields: [azureDataId], references: [id])
+  azureDataId            Int?
+  createdAt              DateTime   @default(now()) @db.Timestamptz()
+  updatedAt              DateTime   @updatedAt @db.Timestamptz()
+
+  @@map("ai_config")
+}
+
+model Project {
+  id          Int           @id @default(autoincrement())
+  nickname    String
+  minutesSent MinutesSent[]
+  createdAt   DateTime      @default(now()) @db.Timestamptz()
+  updatedAt   DateTime      @updatedAt @db.Timestamptz()
+
+  @@map("project")
+}
+
+model MinutesSent {
+  id                    Int      @id @default(autoincrement())
+  nickname              String
+  minuteFilePath        String
+  transcriptionFilePath String
+  project               Project  @relation(fields: [projectId], references: [id])
+  projectId             Int
+  createdAt             DateTime @default(now()) @db.Timestamptz()
+  updatedAt             DateTime @updatedAt @db.Timestamptz()
+
+  @@map("minutes_sent")
+}
