@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { insertUserController } from '@application/controller/user';
+import { authenticateUserController } from '@application/controller/auth';
 
 export default (inputRouter: Router): void => {
   const router = Router();
 
-  router.post('/', insertUserController());
+  // router.post('/', insertUserController());
 
   inputRouter.use('/user', router);
 };
