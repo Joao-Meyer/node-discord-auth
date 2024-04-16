@@ -4,7 +4,7 @@ import { authenticateUserController } from '@application/controller/auth';
 export default (inputRouter: Router): void => {
   const router = Router();
 
-  // router.post('/', insertUserController());
+  router.get('/', authenticateUserController());
 
-  inputRouter.use('/user', router);
+  inputRouter.use('/auth', router);
 };

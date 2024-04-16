@@ -1,74 +1,128 @@
-import { DataSource } from '@infra/database';
+/* eslint-disable max-statements */
 import { ValidationError } from 'yup';
 import { authenticateSchema } from '@data/validation';
+import DiscordOAuth2 from 'discord-oauth2';
+import { env } from '@main/config';
 import {
-  badRequest,
   errorLogger,
   generateToken,
   messageErrorResponse,
   ok,
   validationErrorResponse
 } from '@main/utils';
-import { compare } from 'bcrypt';
-import { messages } from '@domain/helpers';
 import type { Controller } from '@application/protocols';
 import type { Request, Response } from 'express';
-import { env } from '@main/config';
 
-interface Body {
-  login: string;
-  password: string;
-  code: string;
-}
+const getRolesFromRoleIds = (roleIds: string[]): string[] =>
+  roleIds
+    ?.map((roleId) => {
+      if (roleId === env.DC.SERVER_ROLES.ADMIN) return 'admin';
+      if (roleId === env.DC.SERVER_ROLES.PAYER_STUDENT) return 'payer_student';
 
-interface ApiProps {
-  route: string;
-  queryParams?: unknown;
-  body?: unknown;
-  id?: number | string;
-  method?: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
-}
+      return '';
+    })
+    ?.filter((role) => role !== '');
 
 export const authenticateUserController: Controller =
   () => async (request: Request, response: Response) => {
     try {
-      await authenticateSchema.validate(request, { abortEarly: false });
+      const dcOAuth2 = new DiscordOAuth2();
 
-      // code is essentially the discord code
-      const { login, password, code } = request.body as Body;
+      const { code } = request.query;
 
-      // $payload = [
-      //   'code'=>$discord_code,
-      //   'client_id'=>'YOUR_CLIENT_ID',
-      //   'client_secret'=>'YOUR_SECRET',
-      //   'grant_type'=>'authorization_code',
-      //   'redirect_uri'=>'http://localhost:5000/src/process-oauth.php', // or your redirect link
-      //   'scope'=>'identify%20guids',
-      // ];
+      console.log(code);
 
-      const { accessToken } = generateToken({
-        id: user.id,
-        login: user.login
+      const resAAA = await dcOAuth2.tokenRequest({
+        clientId: env.DC.CLIENT_ID,
+        clientSecret: env.DC.CLIENT_SECRET,
+        redirectUri: env.DC.REDIRECT_URI,
+        code,
+        grantType: env.DC.GRANT_TYPE,
+        scope: env.DC.SCOPE
       });
 
-      // https://discordapp.com/api/oauth2
-      const discordTokenResponse = await fetch(`${env.DC.API_URL}/oauth2/token`, {
-        body: JSON.stringify({
-          client_id: env.DC.CLIENT_ID,
-          code
-        }),
-        headers: {
-          'content-type': 'application/json'
-        },
-        method: 'POST'
+      console.log({
+        code,
+        grantType: env.DC.GRANT_TYPE,
+        scope: env.DC.SCOPE
       });
 
-      return ok({
-        payload: {
-          accessToken
-        },
-        response
-      });
+      console.log(resAAA);
+
+      // const dcAuthResponse = await fetch(`${env.DC.TOKEN_AUTH_URL}`, {
+      //   body: JSON.stringify({
+      //     code,
+      //     grant_type: env.DC.GRANT_TYPE,
+      //     redirect_uri: env.DC.REDIRECT_URI
+      //   }),
+      //   headers: {
+      //     Authorization: `Basic ${Buffer.from(
+      //       `${env.DC.CLIENT_ID}:${env.DC.CLIENT_SECRET}`
+      //     ).toString('base64')}`,
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   method: 'POST'
+      // });
+
+      // // console.log(env.DC.TOKEN_AUTH_URL);
+
+      // const bbbb = await dcAuthResponse.json();
+
+      // console.log('bbbb: ', bbbb);
+
+      // const { access_token: authToken } = (await dcAuthResponse.json()) as { access_token: string };
+
+      // console.log('authToken: ', authToken);
+
+      // const dcUserResponse = await fetch(`${env.DC.USERS_URL}`, {
+      //   headers: {
+      //     Authorization: `Bearer ${authToken}`,
+      //     'content-type': 'application/json'
+      //   },
+      //   method: 'GET'
+      // });
+
+      // const aaaa = await dcUserResponse.json();
+
+      // console.log('aaaa: ', aaaa);
+
+      // const { id, avatar, username } = (await dcUserResponse.json()) as {
+      //   avatar: string;
+      //   id: string;
+      //   username: string;
+      // };
+
+      // const dcServerGuildResponse = await fetch(`${env.DC.SERVER_URL}/${env.DC.SERVER_ID}/member`, {
+      //   headers: {
+      //     Authorization: `Bearer ${authToken}`,
+      //     'content-type': 'application/json'
+      //   },
+      //   method: 'GET'
+      // });
+
+      // const { roles } = (await dcServerGuildResponse.json()) as {
+      //   roles: string[];
+      // };
+
+      // console.log({
+      //   avatar,
+      //   id,
+      //   roles,
+      //   username
+      // });
+
+      // const rolesFromIds = getRolesFromRoleIds(roles);
+
+      // const { accessToken } = generateToken({
+      //   avatar,
+      //   id,
+      //   roles: rolesFromIds,
+      //   username
+      // });
+
+      const accessToken = 123;
+
+      return response.redirect(`http://10.107.130.129:5174/auth?token=${accessToken}`);
     } catch (error) {
       errorLogger(error);
 

@@ -1,4 +1,6 @@
 export interface tokenInput {
-  id: number;
-  login: string;
+  avatar: string;
+  id: string;
+  username: string;
+  roles: string[];
 }
