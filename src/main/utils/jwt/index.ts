@@ -1,4 +1,4 @@
-import { env2 } from '@main/config/env';
+import { env } from '@main/config/env';
 import { sign } from 'jsonwebtoken';
 import type { tokenInput } from '@domain/token';
 
@@ -16,11 +16,26 @@ interface generateTokenOutput {
   accessToken: string;
 }
 
-export const generateToken = ({ id, login }: tokenInput): generateTokenOutput => {
-  const { jwtSecret, jwtExpiresIn } = env2;
+export const generateToken = ({
+  avatar,
+  id,
+  roles,
+  username,
+  globalName,
+  nick
+}: tokenInput): generateTokenOutput => {
+  const { JWT_SECRET: jwtSecret, JWT_EXPIRES_IN: expiresIn } = env.API;
 
   const data = {
-    accessToken: sign({ user: { id, login } }, jwtSecret, { expiresIn: jwtExpiresIn })
+    accessToken: sign(
+      {
+        user: { avatar, globalName, id, nick, roles, username }
+      },
+      jwtSecret,
+      {
+        expiresIn
+      }
+    )
   };
 
   return data;

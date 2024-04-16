@@ -5,11 +5,11 @@ import { errorLogger } from '@main/utils';
 
 DataSource.$connect()
   .then(async () => {
-    if (typeof env.API_PORT === 'string') {
+    if (typeof env.API.PORT === 'string') {
       const { http } = await import('@main/config');
 
-      http.listen(env.API_PORT, () => {
-        console.info(`Server started at http://localhost:${env.API_PORT}`);
+      http.listen(env.API.PORT, () => {
+        console.info(`Server started at http://localhost:${env.API.PORT}`);
       });
     } else console.info('Environment variables missing');
   })

@@ -7,8 +7,6 @@ import {
   ok,
   validationErrorResponse
 } from '@main/utils';
-import { env2 } from '@main/config';
-import { hash } from 'bcrypt';
 import { insertUserSchema } from '@data/validation';
 import { messages } from '@domain/helpers';
 import type { Controller } from '@application/protocols';
@@ -38,12 +36,8 @@ export const insertUserController: Controller =
       if (hasUser !== null)
         return badRequest({ message: messages.auth.userAlreadyExists, response });
 
-      const { hashSalt }: { hashSalt: number } = env2;
-
-      const hashedPassword = await hash(password, hashSalt);
-
       await DataSource.user.create({
-        data: { login, password: hashedPassword },
+        data: { login, password },
         select: {
           id: true
         }

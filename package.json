@@ -36,12 +36,12 @@
     "multer": "^1.4.5-lts.1",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
-    "@types/pdf-parse": "^1.1.4",
     "prisma": "^5.11.0",
     "typescript": "^5.0.4",
     "yup": "^1.1.1"
   },
   "devDependencies": {
+    "@types/pdf-parse": "^1.1.4",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",

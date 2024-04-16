@@ -3,16 +3,16 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id        Int      @id @default(autoincrement())
-  login     String   @unique @db.VarChar(150)
+  login     String   @unique
   password  String
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("user")
 }
@@ -22,8 +22,8 @@ model AzureData {
   indexName     String
   nickname      String
   blobContainer String?
-  createdAt     DateTime   @default(now()) @db.Timestamptz()
-  updatedAt     DateTime   @updatedAt @db.Timestamptz()
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   aiConfig      AiConfig[]
 
   @@map("azure_data")
@@ -34,8 +34,8 @@ model OpenAiModel {
   name      String
   maxTokens Int
   AiModel   AiModel[]
-  createdAt DateTime  @default(now()) @db.Timestamptz()
-  updatedAt DateTime  @updatedAt @db.Timestamptz()
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("open_ai_model")
 }
@@ -46,8 +46,8 @@ model AiModel {
   openAiModel   OpenAiModel @relation(fields: [openAiModelId], references: [id])
   openAiModelId Int
   nickname      String
-  createdAt     DateTime    @default(now()) @db.Timestamptz()
-  updatedAt     DateTime    @updatedAt @db.Timestamptz()
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   aiConfig      AiConfig[]
 
   @@map("ai_model")
@@ -68,8 +68,8 @@ model AiConfig {
   aiModelId              Int
   azureData              AzureData? @relation(fields: [azureDataId], references: [id])
   azureDataId            Int?
-  createdAt              DateTime   @default(now()) @db.Timestamptz()
-  updatedAt              DateTime   @updatedAt @db.Timestamptz()
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
 
   @@map("ai_config")
 }
@@ -78,8 +78,8 @@ model Project {
   id          Int           @id @default(autoincrement())
   nickname    String
   minutesSent MinutesSent[]
-  createdAt   DateTime      @default(now()) @db.Timestamptz()
-  updatedAt   DateTime      @updatedAt @db.Timestamptz()
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@map("project")
 }
@@ -91,8 +91,8 @@ model MinutesSent {
   transcriptionFilePath String
   project               Project  @relation(fields: [projectId], references: [id])
   projectId             Int
-  createdAt             DateTime @default(now()) @db.Timestamptz()
-  updatedAt             DateTime @updatedAt @db.Timestamptz()
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
   @@map("minutes_sent")
 }

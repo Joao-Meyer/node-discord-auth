@@ -1,67 +1,90 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import { DataSource } from '@infra/database';
 import { ValidationError } from 'yup';
-import { authenticateSchema } from '@data/validation';
+import { env } from '@main/config';
 import {
-  badRequest,
   errorLogger,
   generateToken,
   messageErrorResponse,
-  ok,
   validationErrorResponse
 } from '@main/utils';
-import { compare } from 'bcrypt';
-import { messages } from '@domain/helpers';
 import type { Controller } from '@application/protocols';
 import type { Request, Response } from 'express';
 
-interface Body {
-  login: string;
-  password: string;
-}
+const getRolesFromRoleIds = (roleIds: string[]): string[] =>
+  roleIds
+    ?.map((roleId) => {
+      if (roleId === env.DC.SERVER_ROLES.ADMIN) return 'admin';
+      if (roleId === env.DC.SERVER_ROLES.PAYER_STUDENT) return 'payer_student';
+
+      return '';
+    })
+    ?.filter((role) => role !== '');
+
+const getAvatarUrl = ({ avatarId, userId }: { userId: string; avatarId: string }): string =>
+  `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png?size=1024`;
 
 export const authenticateUserController: Controller =
   () => async (request: Request, response: Response) => {
     try {
-      await authenticateSchema.validate(request, { abortEarly: false });
+      const { code } = request.query;
 
-      const { login, password } = request.body as Body;
-
-      const user = await DataSource.user.findUnique({
-        select: {
-          id: true,
-          login: true,
-          password: true
-        },
-        where: { login }
+      const params = new URLSearchParams({
+        client_id: env.DC.CLIENT_ID,
+        client_secret: env.DC.CLIENT_SECRET,
+        code: code as string,
+        grant_type: env.DC.GRANT_TYPE,
+        redirect_uri: env.DC.REDIRECT_URI,
+        scope: env.DC.SCOPE
       });
 
-      if (user === null)
-        return badRequest({
-          message: messages.auth.notFound,
-          response
-        });
+      const dcAuthResponse = await fetch(env.DC.TOKEN_AUTH_URL, {
+        body: params,
+        headers: {
+          'Accept-Encoding': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'POST'
+      });
 
-      const passwordIsCorrect = await compare(password, user.password);
+      const authResponse = (await dcAuthResponse.json()) as {
+        access_token: string;
+        token_type: 'Bearer';
+        expires_in: number;
+        refresh_token: string;
+        scope: 'identify';
+      };
 
-      if (!passwordIsCorrect)
-        return badRequest({
-          message: messages.auth.notFound,
-          response
-        });
+      const dcServerGuildResponse = await fetch(`${env.DC.SERVER_URL}/${env.DC.SERVER_ID}/member`, {
+        headers: {
+          Authorization: `${authResponse.token_type} ${authResponse.access_token}`
+        },
+        method: 'GET'
+      });
+
+      const serverGuildResponse = (await dcServerGuildResponse.json()) as {
+        nick: string | null;
+        roles: string[];
+        user: {
+          id: string;
+          username: string;
+          avatar: string;
+          global_name: string;
+        };
+      };
 
       const { accessToken } = generateToken({
-        id: user.id,
-        login: user.login
+        avatar: getAvatarUrl({
+          avatarId: serverGuildResponse.user.avatar,
+          userId: serverGuildResponse.user.id
+        }),
+        globalName: serverGuildResponse.user.global_name,
+        id: serverGuildResponse.user.id,
+        nick: serverGuildResponse.nick,
+        roles: getRolesFromRoleIds(serverGuildResponse.roles),
+        username: serverGuildResponse.user.username
       });
 
-      return ok({
-        payload: {
-          accessToken
-        },
-        response
-      });
+      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+      return response.redirect(`${env.FRONT.AUTH_URL}/${accessToken}`);
     } catch (error) {
       errorLogger(error);
 
