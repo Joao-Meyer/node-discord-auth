@@ -8,8 +8,6 @@ import {
   ok,
   validationErrorResponse
 } from '@main/utils';
-import { env2 } from '@main/config';
-import { hash } from 'bcrypt';
 import { messages } from '@domain/helpers';
 import { updateUserSchema } from '@data/validation';
 import type { Controller } from '@application/protocols';
@@ -43,13 +41,7 @@ export const updateUserController: Controller =
 
       let newPassword: string | undefined;
 
-      if (typeof password !== 'undefined') {
-        const { hashSalt }: { hashSalt: number } = env2;
-
-        const hashedPassword = await hash(password, hashSalt);
-
-        newPassword = hashedPassword;
-      }
+      if (typeof password !== 'undefined') newPassword = password;
 
       await DataSource.user.update({
         data: { login, password: newPassword },

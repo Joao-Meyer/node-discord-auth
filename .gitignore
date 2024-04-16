@@ -36,6 +36,11 @@ src/logs
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+package-lock.json
+
+yarn.lock
+yarn-error.log
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
@@ -51,14 +56,6 @@ src/logs
 
 # SvelteKit build / generate output
 .svelte-kit
-
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
 
 # Local History for Visual Studio Code
 .history/

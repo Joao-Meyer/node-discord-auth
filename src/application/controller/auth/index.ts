@@ -1,13 +1,9 @@
-/* eslint-disable max-statements */
 import { ValidationError } from 'yup';
-import { authenticateSchema } from '@data/validation';
-import DiscordOAuth2 from 'discord-oauth2';
 import { env } from '@main/config';
 import {
   errorLogger,
   generateToken,
   messageErrorResponse,
-  ok,
   validationErrorResponse
 } from '@main/utils';
 import type { Controller } from '@application/protocols';
@@ -23,106 +19,72 @@ const getRolesFromRoleIds = (roleIds: string[]): string[] =>
     })
     ?.filter((role) => role !== '');
 
+const getAvatarUrl = ({ avatarId, userId }: { userId: string; avatarId: string }): string =>
+  `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png?size=1024`;
+
 export const authenticateUserController: Controller =
   () => async (request: Request, response: Response) => {
     try {
-      const dcOAuth2 = new DiscordOAuth2();
-
       const { code } = request.query;
 
-      console.log(code);
-
-      const resAAA = await dcOAuth2.tokenRequest({
-        clientId: env.DC.CLIENT_ID,
-        clientSecret: env.DC.CLIENT_SECRET,
-        redirectUri: env.DC.REDIRECT_URI,
-        code,
-        grantType: env.DC.GRANT_TYPE,
+      const params = new URLSearchParams({
+        client_id: env.DC.CLIENT_ID,
+        client_secret: env.DC.CLIENT_SECRET,
+        code: code as string,
+        grant_type: env.DC.GRANT_TYPE,
+        redirect_uri: env.DC.REDIRECT_URI,
         scope: env.DC.SCOPE
       });
 
-      console.log({
-        code,
-        grantType: env.DC.GRANT_TYPE,
-        scope: env.DC.SCOPE
+      const dcAuthResponse = await fetch(env.DC.TOKEN_AUTH_URL, {
+        body: params,
+        headers: {
+          'Accept-Encoding': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'POST'
       });
 
-      console.log(resAAA);
+      const authResponse = (await dcAuthResponse.json()) as {
+        access_token: string;
+        token_type: 'Bearer';
+        expires_in: number;
+        refresh_token: string;
+        scope: 'identify';
+      };
 
-      // const dcAuthResponse = await fetch(`${env.DC.TOKEN_AUTH_URL}`, {
-      //   body: JSON.stringify({
-      //     code,
-      //     grant_type: env.DC.GRANT_TYPE,
-      //     redirect_uri: env.DC.REDIRECT_URI
-      //   }),
-      //   headers: {
-      //     Authorization: `Basic ${Buffer.from(
-      //       `${env.DC.CLIENT_ID}:${env.DC.CLIENT_SECRET}`
-      //     ).toString('base64')}`,
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   },
-      //   method: 'POST'
-      // });
+      const dcServerGuildResponse = await fetch(`${env.DC.SERVER_URL}/${env.DC.SERVER_ID}/member`, {
+        headers: {
+          Authorization: `${authResponse.token_type} ${authResponse.access_token}`
+        },
+        method: 'GET'
+      });
 
-      // // console.log(env.DC.TOKEN_AUTH_URL);
+      const serverGuildResponse = (await dcServerGuildResponse.json()) as {
+        nick: string | null;
+        roles: string[];
+        user: {
+          id: string;
+          username: string;
+          avatar: string;
+          global_name: string;
+        };
+      };
 
-      // const bbbb = await dcAuthResponse.json();
+      const { accessToken } = generateToken({
+        avatar: getAvatarUrl({
+          avatarId: serverGuildResponse.user.avatar,
+          userId: serverGuildResponse.user.id
+        }),
+        globalName: serverGuildResponse.user.global_name,
+        id: serverGuildResponse.user.id,
+        nick: serverGuildResponse.nick,
+        roles: getRolesFromRoleIds(serverGuildResponse.roles),
+        username: serverGuildResponse.user.username
+      });
 
-      // console.log('bbbb: ', bbbb);
-
-      // const { access_token: authToken } = (await dcAuthResponse.json()) as { access_token: string };
-
-      // console.log('authToken: ', authToken);
-
-      // const dcUserResponse = await fetch(`${env.DC.USERS_URL}`, {
-      //   headers: {
-      //     Authorization: `Bearer ${authToken}`,
-      //     'content-type': 'application/json'
-      //   },
-      //   method: 'GET'
-      // });
-
-      // const aaaa = await dcUserResponse.json();
-
-      // console.log('aaaa: ', aaaa);
-
-      // const { id, avatar, username } = (await dcUserResponse.json()) as {
-      //   avatar: string;
-      //   id: string;
-      //   username: string;
-      // };
-
-      // const dcServerGuildResponse = await fetch(`${env.DC.SERVER_URL}/${env.DC.SERVER_ID}/member`, {
-      //   headers: {
-      //     Authorization: `Bearer ${authToken}`,
-      //     'content-type': 'application/json'
-      //   },
-      //   method: 'GET'
-      // });
-
-      // const { roles } = (await dcServerGuildResponse.json()) as {
-      //   roles: string[];
-      // };
-
-      // console.log({
-      //   avatar,
-      //   id,
-      //   roles,
-      //   username
-      // });
-
-      // const rolesFromIds = getRolesFromRoleIds(roles);
-
-      // const { accessToken } = generateToken({
-      //   avatar,
-      //   id,
-      //   roles: rolesFromIds,
-      //   username
-      // });
-
-      const accessToken = 123;
-
-      return response.redirect(`http://10.107.130.129:5174/auth?token=${accessToken}`);
+      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+      return response.redirect(`${env.FRONT.AUTH_URL}/${accessToken}`);
     } catch (error) {
       errorLogger(error);
 

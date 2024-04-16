@@ -16,11 +16,26 @@ interface generateTokenOutput {
   accessToken: string;
 }
 
-export const generateToken = ({ avatar, id, roles, username }: tokenInput): generateTokenOutput => {
+export const generateToken = ({
+  avatar,
+  id,
+  roles,
+  username,
+  globalName,
+  nick
+}: tokenInput): generateTokenOutput => {
   const { JWT_SECRET: jwtSecret, JWT_EXPIRES_IN: expiresIn } = env.API;
 
   const data = {
-    accessToken: sign({ user: { avatar, id, roles, username } }, jwtSecret, { expiresIn })
+    accessToken: sign(
+      {
+        user: { avatar, globalName, id, nick, roles, username }
+      },
+      jwtSecret,
+      {
+        expiresIn
+      }
+    )
   };
 
   return data;
