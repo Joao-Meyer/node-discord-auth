@@ -1,5 +1,5 @@
 import { DataSource } from '@infra/database';
-import { env2 } from '@main/config/env';
+import { env } from '@main/config/env';
 import { errorLogger, removeBearer, unauthorized } from '@main/utils';
 import { verify } from 'jsonwebtoken';
 import type { Controller } from '@application/protocols';
@@ -18,26 +18,21 @@ export const validateTokenMiddleware: Controller =
 
       if (accessToken === null) return unauthorized({ response });
 
-      const { jwtSecret } = env2;
+      const { JWT_SECRET: jwtSecret } = env.API;
       const {
-        user: { id, login }
+        user: { id, globalName }
       } = verify(accessToken, jwtSecret) as { user: tokenInput };
 
-      if (typeof id === 'undefined' || typeof login === 'undefined')
+      if (typeof id === 'undefined' || typeof globalName === 'undefined')
         return unauthorized({ response });
 
       const account = await DataSource.user.findFirst({
-        where: {
-          AND: {
-            id,
-            login
-          }
-        }
+        where: {}
       });
 
       if (account === null) return unauthorized({ response });
 
-      Object.assign(request, { user: { id, login } });
+      Object.assign(request, { user: { id } });
       next();
     } catch (error) {
       errorLogger(error);
