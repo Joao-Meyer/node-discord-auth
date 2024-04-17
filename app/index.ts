@@ -1,3 +1,4 @@
+import { env } from '@main/config';
 import cors from 'cors';
 import express from 'express';
 
@@ -15,6 +16,6 @@ app.get('/about', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.info(`Server started at http://localhost:${3000}`);
+app.listen(env.API.PORT, () => {
+  console.info(`Server started at http://localhost:${env.API.PORT}`);
 });
