@@ -1,5 +1,4 @@
-import './main/config/module-alias';
-import { env } from '@main/config';
+import { env } from './main/config';
 import cors from 'cors';
 import express from 'express';
 
