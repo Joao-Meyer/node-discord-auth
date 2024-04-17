@@ -1,12 +1,11 @@
 import { ValidationError } from 'yup';
-import { env } from '@main/config';
+import { env } from '../env';
 import {
   errorLogger,
   generateToken,
   messageErrorResponse,
   validationErrorResponse
-} from '@main/utils';
-import type { Controller } from '@application/protocols';
+} from '../utils';
 import type { Request, Response } from 'express';
 
 const getRolesFromRoleIds = (roleIds: string[]): string[] =>
@@ -22,7 +21,7 @@ const getRolesFromRoleIds = (roleIds: string[]): string[] =>
 const getAvatarUrl = ({ avatarId, userId }: { userId: string; avatarId: string }): string =>
   `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png?size=1024`;
 
-export const authenticateUserController: Controller =
+export const authenticateUserController: any =
   () => async (request: Request, response: Response) => {
     try {
       const { code } = request.query;

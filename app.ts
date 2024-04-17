@@ -1,4 +1,4 @@
-import { authenticateUserController } from 'src/application/controller/auth';
+import { authenticateUserController } from './auth';
 
 import express from 'express';
 
@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-app.get('/', authenticateUserController());
+app.get('/auth', authenticateUserController());
 
 app.get('/about', (req, res) => {
   res.json({
