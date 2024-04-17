@@ -16,6 +16,6 @@ app.get('/about', (req, res) => {
   });
 });
 
-app.listen(env.API.PORT, () => {
+app.listen(typeof Number(env.API.PORT) === 'number' ? env.API.PORT : 3000, () => {
   console.info(`Server started at http://localhost:${env.API.PORT}`);
 });
