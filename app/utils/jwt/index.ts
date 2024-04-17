@@ -1,4 +1,4 @@
-import { env } from 'main/config/env';
+import { env } from 'env';
 import { sign } from 'jsonwebtoken';
 import type { tokenInput } from 'domain/token';
 
