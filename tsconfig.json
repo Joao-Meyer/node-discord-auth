@@ -15,6 +15,13 @@
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "outDir": "dist",
+    "paths": {
+      "main/*": ["main/*"],
+      "data/*": ["data/*"],
+      "domain/*": ["domain/*"],
+      "infra/*": ["infra/*"],
+      "application/*": ["application/*"]
+    },
     "resolveJsonModule": true,
     "rootDir": "app",
     "skipLibCheck": false,
