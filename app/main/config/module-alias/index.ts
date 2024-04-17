@@ -1,4 +1,3 @@
-/* eslint-disable no-ternary */
 import 'dotenv/config';
 import { addAlias } from 'module-alias';
 import { readdirSync } from 'fs';
