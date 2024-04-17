@@ -14,7 +14,7 @@
     "noImplicitAny": true,
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "build",
+    "outDir": "dist",
     "paths": {
       "@main/*": ["main/*"],
       "@data/*": ["data/*"],
