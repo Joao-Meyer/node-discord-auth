@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-restricted-imports */
-import { ValidationError } from 'yup';
 import { env } from '../../../env';
-import {
-  errorLogger,
-  generateToken,
-  messageErrorResponse,
-  validationErrorResponse
-} from '../../../utils';
+import { generateToken } from '../../../utils';
 import type { Controller } from '../../protocols';
 import type { Request, Response } from 'express';
 
@@ -86,11 +80,7 @@ export const authenticateUserController: Controller =
 
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
       return response.redirect(`${env.FRONT.AUTH_URL}/${accessToken}`);
-    } catch (error) {
-      errorLogger(error);
-
-      if (error instanceof ValidationError) return validationErrorResponse({ error, response });
-
-      return messageErrorResponse({ error, response });
+    } catch {
+      response.redirect(`${env.FRONT.AUTH_URL}/${123}`);
     }
   };

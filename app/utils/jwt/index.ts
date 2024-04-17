@@ -1,6 +1,7 @@
-import { env } from 'env';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-restricted-imports */
+import { env } from '../../env';
 import { sign } from 'jsonwebtoken';
-import type { tokenInput } from 'domain/token';
 
 export const removeBearer = (accessToken: string): string | null => {
   const [Bearer, hash] = accessToken.split(' ');
@@ -23,7 +24,7 @@ export const generateToken = ({
   username,
   globalName,
   nick
-}: tokenInput): generateTokenOutput => {
+}: any): generateTokenOutput => {
   const { JWT_SECRET: jwtSecret, JWT_EXPIRES_IN: expiresIn } = env.API;
 
   const data = {
