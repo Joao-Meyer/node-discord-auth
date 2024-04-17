@@ -1,4 +1,12 @@
-import { env } from '../env';
+import { ValidationError } from 'yup';
+import { env } from '@main/config';
+import {
+  errorLogger,
+  generateToken,
+  messageErrorResponse,
+  validationErrorResponse
+} from '@main/utils';
+import type { Controller } from '@application/protocols';
 import type { Request, Response } from 'express';
 
 const getRolesFromRoleIds = (roleIds: string[]): string[] =>
@@ -14,7 +22,7 @@ const getRolesFromRoleIds = (roleIds: string[]): string[] =>
 const getAvatarUrl = ({ avatarId, userId }: { userId: string; avatarId: string }): string =>
   `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png?size=1024`;
 
-export const authenticateUserController: any =
+export const authenticateUserController: Controller =
   () => async (request: Request, response: Response) => {
     try {
       const { code } = request.query;
@@ -63,21 +71,25 @@ export const authenticateUserController: any =
         };
       };
 
-      // const { accessToken } = generateToken({
-      //   avatar: getAvatarUrl({
-      //     avatarId: serverGuildResponse.user.avatar,
-      //     userId: serverGuildResponse.user.id
-      //   }),
-      //   globalName: serverGuildResponse.user.global_name,
-      //   id: serverGuildResponse.user.id,
-      //   nick: serverGuildResponse.nick,
-      //   roles: getRolesFromRoleIds(serverGuildResponse.roles),
-      //   username: serverGuildResponse.user.username
-      // });
+      const { accessToken } = generateToken({
+        avatar: getAvatarUrl({
+          avatarId: serverGuildResponse.user.avatar,
+          userId: serverGuildResponse.user.id
+        }),
+        globalName: serverGuildResponse.user.global_name,
+        id: serverGuildResponse.user.id,
+        nick: serverGuildResponse.nick,
+        roles: getRolesFromRoleIds(serverGuildResponse.roles),
+        username: serverGuildResponse.user.username
+      });
 
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-      return response.redirect(`${env.FRONT.AUTH_URL}/${123}`);
+      return response.redirect(`${env.FRONT.AUTH_URL}/${accessToken}`);
     } catch (error) {
-      /* */
+      errorLogger(error);
+
+      if (error instanceof ValidationError) return validationErrorResponse({ error, response });
+
+      return messageErrorResponse({ error, response });
     }
   };

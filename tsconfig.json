@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "baseUrl": "app",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
@@ -23,11 +23,11 @@
       "@application/*": ["application/*"]
     },
     "resolveJsonModule": true,
-    "rootDir": "./",
+    "rootDir": "app",
     "skipLibCheck": false,
     "strict": true,
     "target": "ES6",
     "useDefineForClassFields": true
   },
-  "include": ["./"]
+  "include": ["app"]
 }
