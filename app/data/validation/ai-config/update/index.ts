@@ -1,5 +1,5 @@
-import { numberNotRequired, stringNotRequired } from '@main/utils';
-import { yup } from '@infra/yup';
+import { numberNotRequired, stringNotRequired } from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const updateAiConfigSchema = yup.object().shape({
   body: yup.object().shape({

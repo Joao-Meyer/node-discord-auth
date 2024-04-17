@@ -1,4 +1,4 @@
-import { dateToErrorLogger } from '@main/utils/date';
+import { dateToErrorLogger } from 'main/utils/date';
 import fs from 'fs';
 import path from 'path';
 

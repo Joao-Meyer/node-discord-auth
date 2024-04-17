@@ -1,5 +1,5 @@
-import { numberRequired } from '@main/utils';
-import { yup } from '@infra/yup';
+import { numberRequired } from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const generateMinutesInteractionSchema = yup.object().shape({
   body: yup.object().shape({

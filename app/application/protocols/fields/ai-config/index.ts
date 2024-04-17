@@ -1,6 +1,6 @@
 import { AiModelFields } from '../ai-model';
 import { AzureDataFields } from '../azure-data';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from 'prisma/client';
 
 export const AiConfigFields: Prisma.AiConfigSelect = {
   aiModel: {

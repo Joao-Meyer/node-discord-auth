@@ -1,4 +1,4 @@
-import type { messageTypeResponse } from '@domain/errors';
+import type { messageTypeResponse } from 'domain/errors';
 
 export const authMessages = {
   notFound: {

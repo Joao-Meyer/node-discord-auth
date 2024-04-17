@@ -1,5 +1,5 @@
-import { numberRequired, stringRequired } from '@main/utils';
-import { yup } from '@infra/yup';
+import { numberRequired, stringRequired } from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const insertOpenAiModelSchema = yup.object().shape({
   body: yup.object().shape({

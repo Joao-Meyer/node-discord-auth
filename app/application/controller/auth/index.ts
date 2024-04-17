@@ -1,12 +1,14 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable @typescript-eslint/no-restricted-imports */
 import { ValidationError } from 'yup';
-import { env } from '../../../main/config';
+import { env } from 'main/config';
 import {
   errorLogger,
   generateToken,
   messageErrorResponse,
   validationErrorResponse
-} from '../../../main/utils';
-import type { Controller } from '../../protocols/http';
+} from 'main/utils';
+import type { Controller } from 'application/protocols';
 import type { Request, Response } from 'express';
 
 const getRolesFromRoleIds = (roleIds: string[]): string[] =>

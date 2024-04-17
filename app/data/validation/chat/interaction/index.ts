@@ -1,12 +1,12 @@
-import { ChatRoles } from '@domain/models/enums';
+import { ChatRoles } from 'domain/models/enums';
 import {
   arrayRequired,
   enumTypeRequired,
   numberRequired,
   stringNotRequired,
   stringRequired
-} from '@main/utils';
-import { yup } from '@infra/yup';
+} from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const chatAiInteractionSchema = yup.object().shape({
   body: yup.object().shape({

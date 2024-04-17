@@ -1,5 +1,5 @@
-import { messages } from '@domain/helpers';
-import { yup } from '@infra/yup';
+import { messages } from 'domain/helpers';
+import { yup } from 'infra/yup';
 import type {
   AnyObject,
   AnySchema,
@@ -10,7 +10,7 @@ import type {
   NumberSchema,
   StringSchema
 } from 'yup';
-import type { messageTypeResponse } from '@domain/errors';
+import type { messageTypeResponse } from 'domain/errors';
 
 export const emailRequired = (field: messageTypeResponse): StringSchema =>
   yup

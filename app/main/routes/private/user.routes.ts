@@ -4,7 +4,7 @@ import {
   findOneUserController,
   findUserController,
   updateUserController
-} from '@application/controller/user';
+} from 'application/controller/user';
 
 export default (inputRouter: Router): void => {
   const router = Router();

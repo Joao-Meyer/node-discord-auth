@@ -1,4 +1,4 @@
-import { DataSource } from '@infra/database';
+import { DataSource } from 'infra/database';
 import { ValidationError } from 'yup';
 import {
   badRequest,
@@ -6,10 +6,10 @@ import {
   messageErrorResponse,
   ok,
   validationErrorResponse
-} from '@main/utils';
-import { insertUserSchema } from '@data/validation';
-import { messages } from '@domain/helpers';
-import type { Controller } from '@application/protocols';
+} from 'main/utils';
+import { insertUserSchema } from 'data/validation';
+import { messages } from 'domain/helpers';
+import type { Controller } from 'application/protocols';
 import type { Request, Response } from 'express';
 
 interface Body {

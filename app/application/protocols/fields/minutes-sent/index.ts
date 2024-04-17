@@ -1,5 +1,5 @@
 import { ProjectFields } from '../project';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from 'prisma/client';
 
 export const MinutesSentFields: Prisma.MinutesSentSelect = {
   createdAt: true,

@@ -1,4 +1,4 @@
-import type { tokenInput } from '@domain/token';
+import type { tokenInput } from 'domain/token';
 
 declare global {
   namespace Express {

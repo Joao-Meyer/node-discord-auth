@@ -1,15 +1,9 @@
-import { DataSource } from '@infra/database';
-import {
-  errorLogger,
-  getGenericFilter,
-  getPagination,
-  messageErrorResponse,
-  ok
-} from '@main/utils';
-import { userListQueryFields } from '@data/validation';
-import type { Controller } from '@application/protocols';
+import { DataSource } from 'infra/database';
+import { errorLogger, getGenericFilter, getPagination, messageErrorResponse, ok } from 'main/utils';
+import { userListQueryFields } from 'data/validation';
+import type { Controller } from 'application/protocols';
 import type { Request, Response } from 'express';
-import type { userFields, userQueryFields } from '@data/validation';
+import type { userFields, userQueryFields } from 'data/validation';
 
 export const findUserController: Controller =
   () =>

@@ -1,5 +1,5 @@
-import { stringRequired } from '@main/utils';
-import { yup } from '@infra/yup';
+import { stringRequired } from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const authenticateSchema = yup.object().shape({
   body: yup.object().shape({

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { badRequest, errorLogger, messageErrorResponse } from '@main/utils';
-import { messages } from '@domain/helpers';
+import { badRequest, errorLogger, messageErrorResponse } from 'main/utils';
+import { messages } from 'domain/helpers';
 import multer, { MulterError, diskStorage } from 'multer';
 import path from 'path';
-import type { Controller } from '@application/protocols';
+import type { Controller } from 'application/protocols';
 import type { NextFunction, Request, Response } from 'express';
 
 const storage = diskStorage({

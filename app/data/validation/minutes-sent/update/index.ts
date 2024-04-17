@@ -1,5 +1,5 @@
-import { numberNotRequired, numberRequired, stringNotRequired } from '@main/utils';
-import { yup } from '@infra/yup';
+import { numberNotRequired, numberRequired, stringNotRequired } from 'main/utils';
+import { yup } from 'infra/yup';
 
 export const updateMinutesSentSchema = yup.object().shape({
   body: yup.object().shape({
