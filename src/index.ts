@@ -1,6 +1,5 @@
 import { app } from './main/config/app';
-import { env } from './main/config/env';
 
-app.listen(env.API.PORT, () => {
-  console.info(`Server started at http://localhost:${env.API.PORT}`);
+app.listen(3000, () => {
+  console.info(`Server started at http://localhost:${3000}`);
 });
