@@ -1,3 +1,3 @@
-export const privateFiles = ['user.routes.ts'];
+export const privateFiles = ['user.routes.js'];
 
-export const publicFiles = ['auth.routes.ts', 'test.routes.ts'];
+export const publicFiles = ['auth.routes.js', 'test.routes.js'];
