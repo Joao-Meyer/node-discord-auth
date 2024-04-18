@@ -1,4 +1,4 @@
-import { bodyParser, contentType, staticFolder, staticRoute } from 'main/middleware';
+import { bodyParser, contentType, staticFolder, staticRoute } from '../../middleware';
 import type { Express } from 'express';
 
 export const setupMiddleware = (app: Express): void => {

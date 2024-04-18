@@ -126,7 +126,7 @@
     "@typescript-eslint/no-redeclare": "error",
     "@typescript-eslint/no-redundant-type-constituents": "error",
     "@typescript-eslint/no-require-imports": "error",
-    "@typescript-eslint/no-restricted-imports": ["error", { "patterns": ["../.*", "./.*"] }],
+    "@typescript-eslint/no-restricted-imports": ["off"],
     "@typescript-eslint/no-shadow": "error",
     "@typescript-eslint/no-this-alias": "error",
     "@typescript-eslint/no-throw-literal": "error",

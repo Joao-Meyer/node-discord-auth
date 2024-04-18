@@ -1,9 +1,9 @@
 /* eslint-disable no-undefined */
 import { type PrettyYupError, formatYupError } from '../yup-resolver-errors';
-import { messages, statusCodeList } from 'domain/helpers';
+import { messages, statusCodeList } from '../../../domain/helpers';
 import type { Response } from 'express';
 import type { ValidationError } from 'yup';
-import type { messageTypeResponse } from 'domain/errors';
+import type { messageTypeResponse } from '../../../domain/errors';
 
 export const created = ({
   response,

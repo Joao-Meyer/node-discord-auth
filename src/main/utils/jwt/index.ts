@@ -1,6 +1,6 @@
-import { env } from 'main/config/env';
+import { env } from '../../config/env';
 import { sign } from 'jsonwebtoken';
-import type { tokenInput } from 'domain/token';
+import type { tokenInput } from '../../../domain/token';
 
 export const removeBearer = (accessToken: string): string | null => {
   const [Bearer, hash] = accessToken.split(' ');

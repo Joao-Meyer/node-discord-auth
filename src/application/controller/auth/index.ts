@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
-import { env } from 'main/config';
-import { generateToken } from 'main/utils';
-import type { Controller } from 'application/protocols';
+import { env } from '../../../main/config/env';
+import { generateToken } from '../../../main/utils';
+import type { Controller } from '../../protocols';
 import type { Request, Response } from 'express';
 
 const getRolesFromRoleIds = (roleIds: string[]): string[] =>

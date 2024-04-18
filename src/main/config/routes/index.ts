@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import { join } from 'path';
 import { readdirSync } from 'fs';
-import { validateTokenMiddleware } from 'main/middleware/validation';
+import { validateTokenMiddleware } from '../../middleware/validation';
 import type { Express } from 'express';
 
 export const setupRoutes = (app: Express): void => {
