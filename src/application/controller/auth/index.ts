@@ -84,7 +84,7 @@ export const authenticateUserController: Controller =
         username: serverGuildResponse.user.username
       });
 
-      return response.redirect(`${env.FRONT.URL}/${accessToken}`);
+      return response.redirect(`${env.FRONT.URL}/auth/${accessToken}`);
     } catch {
       return response.redirect(`${env.FRONT.URL}`);
     }
