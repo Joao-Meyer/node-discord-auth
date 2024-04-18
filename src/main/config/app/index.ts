@@ -1,0 +1,17 @@
+import { createServer } from 'http';
+import { setupMiddleware } from '../middleware';
+import { setupRoutes } from '../routes';
+import cors from 'cors';
+import express from 'express';
+
+const app = express();
+
+setupMiddleware(app);
+
+app.use(cors());
+
+setupRoutes(app);
+
+const http = createServer(app);
+
+export { http, app };
