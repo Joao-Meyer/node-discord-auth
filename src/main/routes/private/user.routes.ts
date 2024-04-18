@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export default (inputRouter: Router): void => {
+export const UserRoutes = (inputRouter: Router): void => {
   const router = Router();
 
   inputRouter.use('/user', router);
