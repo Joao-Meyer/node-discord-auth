@@ -11,8 +11,6 @@ export const TestRoutes = (inputRouter: Router): void => {
     });
   });
 
-  router.get('/favicon.ico');
-
   router.get('/user', async (req, res) => {
     const response = await DataSource.user.findMany({
       select: {
