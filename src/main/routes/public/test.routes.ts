@@ -26,5 +26,16 @@ export const TestRoutes = (inputRouter: Router): void => {
     });
   });
 
+  router.post('/user', async (req, res) => {
+    const { name } = req.body;
+    const response = await DataSource.user.create({
+      data: { name }
+    });
+
+    return res.json({
+      response
+    });
+  });
+
   inputRouter.use('/', router);
 };
