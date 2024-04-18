@@ -25,6 +25,6 @@ export const env = {
     USERS_URL: String(process.env.DC_USERS_URL)
   },
   FRONT: {
-    AUTH_URL: String(process.env.FRONT_AUTH_URL)
+    URL: String(process.env.FRONT_URL)
   }
 };

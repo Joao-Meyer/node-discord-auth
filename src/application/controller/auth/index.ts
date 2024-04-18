@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable consistent-return */
 import { env } from '../../../main/config/env';
 import { generateToken } from '../../../main/utils';
@@ -20,12 +21,17 @@ const getAvatarUrl = ({ avatarId, userId }: { userId: string; avatarId: string }
 export const authenticateUserController: Controller =
   () => async (request: Request, response: Response) => {
     try {
-      const { code } = request.query;
+      const { code, error } = request.query;
+
+      if (typeof error === 'string')
+        return response.redirect(`${env.FRONT.URL}?error=login_failure`);
+      if (typeof code !== 'string')
+        return response.redirect(`${env.FRONT.URL}?error=login_failure`);
 
       const params = new URLSearchParams({
         client_id: env.DC.CLIENT_ID,
         client_secret: env.DC.CLIENT_SECRET,
-        code: code as string,
+        code,
         grant_type: env.DC.GRANT_TYPE,
         redirect_uri: env.DC.REDIRECT_URI,
         scope: env.DC.SCOPE
@@ -78,9 +84,8 @@ export const authenticateUserController: Controller =
         username: serverGuildResponse.user.username
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-      return response.redirect(`${env.FRONT.AUTH_URL}/${accessToken}`);
+      return response.redirect(`${env.FRONT.URL}/${accessToken}`);
     } catch {
-      response.redirect(`${env.FRONT.AUTH_URL}/${123}`);
+      return response.redirect(`${env.FRONT.URL}`);
     }
   };
