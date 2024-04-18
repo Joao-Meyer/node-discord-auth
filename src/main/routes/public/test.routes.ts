@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { DataSource } from '../../../infra/database';
 import { Router } from 'express';
 
 export const TestRoutes = (inputRouter: Router): void => {
@@ -6,6 +8,21 @@ export const TestRoutes = (inputRouter: Router): void => {
   router.get('/', (req, res) => {
     res.json({
       message: 'Api running successfully (◡‿◡)'
+    });
+  });
+
+  router.get('/user', async (req, res) => {
+    const response = await DataSource.user.findMany({
+      select: {
+        createdAt: true,
+        id: true,
+        name: true,
+        updatedAt: true
+      }
+    });
+
+    return res.json({
+      response
     });
   });
 
