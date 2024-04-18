@@ -6,7 +6,8 @@
   "author": "joao.meyer <joaoparizotimeyer@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate",
     "seed": "npx prisma db seed",
     "reset": "npx prisma migrate reset",
     "dev": "env-cmd -f ./.env.local ts-node-dev --respawn --transpile-only --clear -r dotenv/config --inspect=0.0.0.0:9229 src/index.ts --host",
