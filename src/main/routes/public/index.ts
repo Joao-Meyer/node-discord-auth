@@ -1,2 +1,2 @@
-export { default as AuthRoutes } from './auth.routes';
-export { default as TestRoutes } from './test.routes';
+export * from './auth.routes';
+export * from './test.routes';

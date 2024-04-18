@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export default (inputRouter: Router): void => {
+export const TestRoutes = (inputRouter: Router): void => {
   const router = Router();
 
   router.get('/', (req, res) => {

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable function-paren-newline */
 import { AuthRoutes, TestRoutes } from '../../routes/public';
 import { Router } from 'express';
 import { UserRoutes } from '../../routes/private';
