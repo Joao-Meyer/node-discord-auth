@@ -1,23 +1,21 @@
-import { authenticateUserController } from './application/controller/auth';
-import cors from 'cors';
-import express from 'express';
+import { DataSource } from './infra/database';
+import { env } from './main/config/env';
+import { errorLogger } from './main/utils';
 
-const app = express();
+DataSource.$connect()
+  .then(async () => {
+    if (typeof env.API.PORT === 'string') {
+      const { http } = await import('./main/config/app');
 
-app.use(cors());
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.get('/auth', authenticateUserController());
-
-app.get('/about', (req, res) => {
-  res.json({
-    ola: 'About route 🎉 '
+      http.listen(env.API.PORT, () => {
+        console.info(`Server started at http://localhost:${env.API.PORT}`);
+      });
+    } else console.info('Environment variables missing');
+  })
+  .catch((error: unknown) => {
+    if (error instanceof Error) {
+      console.error(`An error of type ${error.name} occurred. See the logs error...`);
+      console.error(error);
+    }
+    errorLogger(error);
   });
-});
-
-app.listen(3000, () => {
-  console.info(`Server started at http://localhost:${3000}`);
-});

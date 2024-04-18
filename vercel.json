@@ -9,6 +9,10 @@
     {
       "src": "src/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "prisma/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
